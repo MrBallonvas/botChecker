@@ -7,42 +7,45 @@ urlFacebok = 'https://ru-ru.facebook.com/'
 urlInstagram = 'https://www.instagram.com/'
 urlTwitter = 'https://twitter.com/?lang=ru'
 
-def checkSocNetworks(url):
-	r = requests.get(url)
+def checkSocNetworks(message, url):
+	try:
+		res = requests.get(url)
+		print(res.status_code)
 
-	print(r.status_code)
+		if res.status_code == 200:
+			bot.send_message(message.chat.id, "Выбранный вами сервис "+str(message.text)+" функционирует нормально.")
+			bot.send_message(message.chat.id, "вот ваш ресурс \n"+url)
 
-	
+	except Exception as e:
+		bot.send_message(message.chat.id, "Выбранный вами сервис "+str(message.text)+" недоступен.")
 
-checkSocNetworks(urlTwitter)
+bot = telebot.TeleBot('5238271299:AAFK97xyBijCBDxOvX-J_q5J9TnoIa2RgvM')
 
-# bot = telebot.TeleBot('5238271299:AAFK97xyBijCBDxOvX-J_q5J9TnoIa2RgvM')
+@bot.message_handler(commands=['start'])
+def start_message(message):
+	markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+	item1=types.KeyboardButton("youtube")
+	item2=types.KeyboardButton("facebook")
+	item3=types.KeyboardButton("instagram")
+	item4=types.KeyboardButton("twitter")
+	markup.add(item1)
+	markup.add(item2)
+	markup.add(item3)
+	markup.add(item4)
+	bot.send_message(message.chat.id,"Привет, выберите сервис который вы хотите проверить.", reply_markup=markup)
 
-# @bot.message_handler(commands=['start'])
-# def start_message(message):
-# 	markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
-# 	item1=types.KeyboardButton("youtube")
-# 	item2=types.KeyboardButton("facebook")
-# 	item3=types.KeyboardButton("instagram")
-# 	item4=types.KeyboardButton("twitter")
-# 	markup.add(item1)
-# 	markup.add(item2)
-# 	markup.add(item3)
-# 	markup.add(item4)
-# 	bot.send_message(message.chat.id,"Привет, выберите сервис который вы хотите проверить.", reply_markup=markup)
+@bot.message_handler(content_types='text')
+def message_reply(message):
+	if message.text=="youtube":
+		checkSocNetworks(message, urlYoutube)
 
-# @bot.message_handler(content_types='text')
-# def message_reply(message):
-# 	if message.text=="youtube":
-# 		bot.send_message(message.chat.id,"youtube")
+	if message.text=="facebook":
+		checkSocNetworks(message, urlFacebok)
 
-# 	if message.text=="facebook":
-# 		bot.send_message(message.chat.id,"facebook")
+	if message.text=="instagram":
+		checkSocNetworks(message, urlInstagram)
 
-# 	if message.text=="instagram":
-# 		bot.send_message(message.chat.id,"instagram")
+	if message.text=="twitter":
+		checkSocNetworks(message, urlTwitter)
 
-# 	if message.text=="twitter":
-# 		bot.send_message(message.chat.id,"twitter")
-
-# bot.polling(none_stop=True)
+bot.polling(none_stop=True)
