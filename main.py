@@ -19,7 +19,7 @@ def checkSocNetworks(message, url):
 	except Exception as e:
 		bot.send_message(message.chat.id, "Выбранный вами сервис "+str(message.text)+" недоступен.")
 
-bot = telebot.TeleBot('5238271299:AAFK97xyBijCBDxOvX-J_q5J9TnoIa2RgvM')
+bot = telebot.TeleBot(<token>)
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
